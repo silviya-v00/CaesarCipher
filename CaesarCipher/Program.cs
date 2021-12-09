@@ -61,14 +61,24 @@ namespace CaesarCipher
                     {
                         value = 26 - value;
                     }
+                    string alphabet = "";
+                    string bg = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЮЯ";
+                    string eng = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                    char firstInputEl = new string(message.SkipWhile(c => !Char.IsLetter(c)).ToArray()).ToLower().FirstOrDefault();
+
+                    if (bg.ToLower().Contains(firstInputEl))
+                        alphabet = bg;
+                    else
+                        alphabet = eng;
+
                     foreach (char ch in message)
                     {
                         if (char.IsLetter(ch))
                         {
                             if (char.IsUpper(ch))
-                                letterNum = ((ch + value - 'A') % 26) + 'A';
+                                letterNum = ((ch + value - alphabet.ToUpper().FirstOrDefault()) % alphabet.Length) + alphabet.ToUpper().FirstOrDefault();
                             else
-                                letterNum = ((ch + value - 'a') % 26) + 'a';
+                                letterNum = ((ch + value - alphabet.ToLower().FirstOrDefault()) % alphabet.Length) + alphabet.ToLower().FirstOrDefault();
                             endMessage += Convert.ToChar(letterNum).ToString();
                         }
                         else
