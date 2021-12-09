@@ -57,10 +57,6 @@ namespace CaesarCipher
             {
                 if (int.TryParse(shift, out value))
                 {
-                    if (operationType == Decript)
-                    {
-                        value = 26 - value;
-                    }
                     string alphabet = "";
                     string bg = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЮЯ";
                     string eng = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -68,18 +64,24 @@ namespace CaesarCipher
 
                     if (bg.ToLower().Contains(firstInputEl))
                         alphabet = bg;
-                    else
+                    else if (eng.ToLower().Contains(firstInputEl))
                         alphabet = eng;
+                    else
+                    {
+                        Console.WriteLine("\nInvalid character!");
+                        operationType();
+                    }
+
+                    if (operationType == Decript)
+                        value = alphabet.Length - value;
 
                     foreach (char ch in message)
                     {
                         if (char.IsLetter(ch))
                         {
-                            if (char.IsUpper(ch))
-                                letterNum = ((ch + value - alphabet.ToUpper().FirstOrDefault()) % alphabet.Length) + alphabet.ToUpper().FirstOrDefault();
-                            else
-                                letterNum = ((ch + value - alphabet.ToLower().FirstOrDefault()) % alphabet.Length) + alphabet.ToLower().FirstOrDefault();
-                            endMessage += Convert.ToChar(letterNum).ToString();
+                            alphabet = char.IsUpper(ch) ? alphabet.ToUpper() : alphabet.ToLower();
+                            letterNum = (alphabet.IndexOf(ch) + value) % alphabet.Length;
+                            endMessage += alphabet[letterNum].ToString();
                         }
                         else
                             endMessage += ch;
@@ -93,7 +95,7 @@ namespace CaesarCipher
             }
             else
             {
-                Console.WriteLine("Please choose shift number!");
+                Console.WriteLine("\nPlease choose shift number!");
                 operationType();
             }
             return endMessage;
